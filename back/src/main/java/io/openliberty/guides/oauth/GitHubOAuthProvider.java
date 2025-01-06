@@ -1,15 +1,17 @@
 package io.openliberty.guides.oauth;
 
+import org.eclipse.microprofile.config.inject.ConfigProperty;
+
 public class GitHubOAuthProvider implements OAuthProvider {
 
     @Override
     public String getClientId() {
-        return "Ov23liPya3bj2vsGdjbT";
+        return "GitHub_Client_ID";
     }
 
     @Override
     public String getClientSecret() {
-        return "1c6aefc8aa023a05a4e398578af57f2b12878e4b";
+        return "GitHub_Client_Secret";
     }
 
     @Override

@@ -1,15 +1,17 @@
 package io.openliberty.guides.oauth;
 
+import org.eclipse.microprofile.config.inject.ConfigProperty;
+
 public class GoogleOAuthProvider implements OAuthProvider {
 
     @Override
     public String getClientId() {
-        return "315285799849-ehad03jql8ualoeotimsacd5gq4tm8nd.apps.googleusercontent.com";
+        return "GOOGLE_CLIENT_ID";
     }
 
     @Override
     public String getClientSecret() {
-        return "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";
+        return "GOOGLE_CLIENT_SECRET";
     }
 
     @Override
