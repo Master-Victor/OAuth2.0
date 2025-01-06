@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>OAuth 2.0 Login</title>
+</head>
+
+<body>
+    <h1>OAuth 2.0 Login</h1>
+    <button id="google-login">Login with Google</button>
+    <button id="github-login">Login with GitHub</button>
+    <button id="google-logout" style="display: none;">Logout Google</button>
+    <button id="github-logout" style="display: none;">Logout GitHub</button>
+    <pre id="user-info">User information will appear here...</pre>
+
+    <script>
+        const clientId = '315285799849-ehad03jql8ualoeotimsacd5gq4tm8nd.apps.googleusercontent.com';
+        const redirectUri = 'http://127.0.0.1:9080/api/oauth/callback';
+        const scope = 'openid profile email';
+        const responseType = 'code';
+
+        const authUrl = `https://accounts.google.com/o/oauth2/v2/auth?client_id=${clientId}&redirect_uri=${redirectUri}&response_type=${responseType}&scope=${scope}`;
+
+        // Botón de login google
+        document.getElementById('google-login').addEventListener('click', () => {
+            const loginWindow = window.open(authUrl, '_blank', 'width=500,height=600');
+
+            // Listener para recibir datos de la ventana emergente
+            window.addEventListener('message', (event) => {
+                if (event.origin === 'http://127.0.0.1:9080') {
+                    console.log('Datos recibidos desde el backend:', event.data);
+                    document.getElementById('user-info').textContent = JSON.stringify(event.data, null, 2);
+
+                    // Mostrar botón de logout y ocultar botón de login
+                    document.getElementById('google-login').style.display = 'none';
+                    document.getElementById('google-logout').style.display = 'block';
+                } else {
+                    console.error('Origen no permitido:', event.origin);
+                }
+            });
+        });
+        //Botón de logout google
+        document.getElementById('google-logout').addEventListener('click', () => {
+            fetch('http://127.0.0.1:9080/api/oauth/logout?provider=google', {
+                method: 'GET',
+                headers: { 'Content-Type': 'application/json' },
+                credentials: 'include',
+                mode: 'no-cors'
+            })
+                .then(data => {
+                    document.getElementById('user-info').textContent = 'User information will appear here...';
+                    // Mostrar botón de login y ocultar botón de logout
+                    document.getElementById('google-login').style.display = 'block';
+                    document.getElementById('google-logout').style.display = 'none';
+                })
+                .catch(error => console.error('Error al hacer logout:', error));
+        });
+        const githubClientId = 'Ov23liPya3bj2vsGdjbT';
+        const githubRedirectUri = 'http://127.0.0.1:9080/api/oauth/github';
+        const githubScope = 'read:user user:email';
+        const githubAuthUrl = `https://github.com/login/oauth/authorize?client_id=${githubClientId}&redirect_uri=${githubRedirectUri}&scope=${githubScope}`;
+
+        // Login con GitHub
+        document.getElementById('github-login').addEventListener('click', () => {
+            const loginWindow = window.open(githubAuthUrl, '_blank', 'width=500,height=600');
+            window.addEventListener('message', (event) => {
+                if (event.origin === 'http://127.0.0.1:9080') {
+                    document.getElementById('user-info').textContent = JSON.stringify(event.data, null, 2);
+                    document.getElementById('github-login').style.display = 'none';
+                    document.getElementById('github-logout').style.display = 'block';
+                }
+            });
+        });
+
+        document.getElementById('github-logout').addEventListener('click', () => {
+            fetch('http://127.0.0.1:9080/api/oauth/logout?provider=github', {
+                method: 'GET',
+                headers: { 'Content-Type': 'application/json' },
+                credentials: 'include',
+                mode: 'no-cors'
+            })
+                .then(data => {
+                    document.getElementById('user-info').textContent = 'User information will appear here...';
+                    // Mostrar botón de login y ocultar botón de logout
+                    document.getElementById('github-login').style.display = 'block';
+                    document.getElementById('github-logout').style.display = 'none';
+                })
+                .catch(error => console.error('Error al hacer logout:', error));
+        });
+    </script>
+</body>
+
+</html>

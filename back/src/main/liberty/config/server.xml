@@ -1,0 +1,24 @@
+<server description="Intro REST Guide Liberty server">
+  <!-- tag::featureManager[] -->
+  <featureManager>
+    <feature>mpJwt-2.1</feature>
+    <feature>restfulWS-3.1</feature>
+    <feature>jsonb-3.0</feature>
+    <feature>cdi-4.0</feature>
+    <feature>mpConfig-3.0</feature>
+  </featureManager>
+  <!-- end::featureManager[] -->
+
+  <!-- tag::httpEndpoint[] -->
+<httpEndpoint httpPort="${http.port}" httpsPort="${https.port}" id="defaultHttpEndpoint" host="*">
+    <customHeaders>
+        <header name="Cross-Origin-Opener-Policy" value="same-origin" />
+        <header name="Cross-Origin-Embedder-Policy" value="require-corp" />
+    </customHeaders>
+</httpEndpoint>
+  <!-- end::httpEndpoint[] -->
+
+  <!-- tag::webApplication[] -->
+  <webApplication location="guide-rest-intro.war" contextRoot="${app.context.root}" />
+  <!-- end::webApplication[] -->
+</server>
